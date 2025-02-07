@@ -15,7 +15,7 @@ interface ApiResponse {
 const Chatbot: React.FC = () => {
   const [userInput, setUserInput] = useState<string>("");
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
-  const [sidebarHistory, setSidebarHistory] = useState<string[]>([]); // Sidebar message history
+  
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   // Scroll to the bottom on new message
@@ -55,41 +55,24 @@ const Chatbot: React.FC = () => {
   };
 
   // Function to re-use a previous question from the sidebar
-  const handleSidebarClick = (message: string) => {
-    setUserInput(message);
-  };
+  
 
   return (
-    <div >
+    <div className= "chat">
       {/* Sidebar */}
       <div className="nav">
-      <div className="w-64 bg-gray-800 p-4 flex flex-col">
-        <div className="text-white text-2xl font-semibold mb-4">STYLUX</div>
-        <div className="text-white text-lg mb-8">💬 Explore STYLUX</div>
-
-        <div className="text-gray-400 text-sm mb-2">🕑 Recent Queries</div>
-        <div className="overflow-y-auto margin-left-10">
-          {sidebarHistory.map((msg, index) => (
-            <div
-              key={index}
-              className="sidebar-item text-gray-300 py-2 px-4 cursor-pointer hover:bg-gray-700 rounded-md"
-              onClick={() => handleSidebarClick(msg)}
-            >
-              {msg.length > 30 ? `${msg.substring(0, 30)}...` : msg} {/* Shorten long messages */}
-            </div>
-          ))}
-        </div>
-      </div>
+      
       </div>
 
       {/* Chat Container */}
-      <div className="flex-1 bg-purple-900 p-6 flex flex-col ">
+      <div className="ch">
+      <div className="flex-1  p-6 flex flex-col ">
         <div className="flex justify-between items-center mb-6">
           
         </div>
 
         {/* Chat History */}
-        <div className="flex-1 overflow-y-auto bg-purple-800 rounded-lg p-4">
+        <div className="flex-1 overflow-y-auto bg-transparent rounded-lg p-4">
           {chatHistory.map((msg, index) => (
             <div key={index} className={`mb-4 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
               <div
@@ -124,6 +107,7 @@ const Chatbot: React.FC = () => {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

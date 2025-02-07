@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
-
+import './signup.css'
+import { Link } from "react-router-dom";
 function Signup() {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -31,9 +32,17 @@ function Signup() {
           <User className="h-8 w-8 text-white" />
           <span className="text-white text-2xl font-bold">STYLUX</span>
         </div>
-        <button className="bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600 transition-colors">
-          Try for free
+        <div className='hmom'>
+        <button className='bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600 transition-colors'>
+          <Link to='/'>Home</Link>
         </button>
+        </div>
+        <div className='rue'>
+        <button className="bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600 transition-colors">
+          <Link to='/try'>Try for free</Link>
+        </button>
+        </div>
+        
       </header>
 
       {/* Main Content */}

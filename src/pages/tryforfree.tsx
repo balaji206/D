@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronDown, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import './trythis.css';
 function Tryfor() {
   return (
@@ -14,7 +15,7 @@ function Tryfor() {
             <ChevronDown className="w-5 h-5 text-white ml-2" />
           </div>
           <button className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-full transition-colors">
-            Try for free
+            <Link to='/'>Home</Link>
           </button>
         </div>
       </nav>

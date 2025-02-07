@@ -9,7 +9,9 @@ function Home() {
   const handleGenerate = () => {
     navigate('/generated-page');
   };
-
+  const handlelogin=()=>{
+    navigate('/login');
+  }
   const handlesignup=()=>{
     navigate('/sign-up');
   }
@@ -34,6 +36,9 @@ function Home() {
             </button>
             <button className="px-6 py-2 rounded-full bg-purple-500 text-white hover:bg-purple-600 transition-colors">
               <Link to="/try">Try for free</Link>
+            </button>
+            <button onClick={handlelogin} className='px-6 py-2 rounded-full bg-purple-500 text-white  hover:bg-purple-600 transition-colors'>
+            <Link to='/login'>  Login </Link>
             </button>
           </div>
         </div>
