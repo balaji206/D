@@ -5,4 +5,4 @@ export default {
   },
 };
 
-// some comit message
+// some comit messages
