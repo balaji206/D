@@ -68,6 +68,7 @@ const Chatbot: React.FC = () => {
         <div className="text-white text-lg mb-8">💬 Explore STYLUX</div>
 
         <div className="text-gray-400 text-sm mb-2">🕑 Recent Queries</div>
+        <div className="scroll">
         <div className="overflow-y-auto margin-left-10">
           {sidebarHistory.map((msg, index) => (
             <div
@@ -78,6 +79,7 @@ const Chatbot: React.FC = () => {
               {msg.length > 30 ? `${msg.substring(0, 30)}...` : msg} {/* Shorten long messages */}
             </div>
           ))}
+        </div>
         </div>
       </div>
       </div>
@@ -97,7 +99,7 @@ const Chatbot: React.FC = () => {
               >
                 {msg.text}
               </div>
-              <div className={`text-xs text-gray-500 ${msg.sender === "user" ? "text-right" : "text-left"}`}>{msg.timestamp}</div>
+              <div className={`text-xs text-white ${msg.sender === "user" ? "text-right" : "text-left"}`}>{msg.timestamp}</div>
             </div>
           ))}
           <div ref={chatEndRef}></div>

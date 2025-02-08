@@ -4,3 +4,12 @@
 .ho{
     margin-left: 980px;
 }
+.relative1{
+    border-radius: 25px;
+    box-shadow: 5px 5px 5px rgba(255, 255, 255, 0.2);
+}
+span{
+    background: linear-gradient(151deg,#A58CD9 0%,#5421C0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

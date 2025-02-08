@@ -1,108 +1,227 @@
-import React, { useState } from "react";
-import { Menu, PenLine, Plus } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Menu, PenLine, Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
-import Chatbot from "./chatbot";
+
+import axios from "axios";
+
+interface Message {
+  sender: "user" | "bot";
+  text: string;
+  timestamp: string;
+}
 
 function Message() {
-  const [message, setMessage] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false); // Track the state of the hamburger menu
-  const [recentQueries, setRecentQueries] = useState<string[]>([]); // Store recent queries
+  const [userInput, setUserInput] = useState("");
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [sidebarHistory, setSidebarHistory] = useState<string[]>([]);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-    
-    // Add message to recent queries
-    setRecentQueries((prevQueries) => [message, ...prevQueries].slice(0, 5)); // Keep only the last 5 queries
-
-    // Reset the input after sending
-    setMessage("");
+  const toggleSidebar = () => {
+    setSidebarVisible(!sidebarVisible);
   };
 
-  const toggleMenu = () => setMenuOpen(!menuOpen); // Toggle menu state
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatHistory]);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userInput.trim()) return;
+
+    const newMessage: Message = {
+      sender: "user",
+      text: userInput,
+      timestamp: new Date().toLocaleTimeString(),
+    };
+
+    setChatHistory(prev => [...prev, newMessage]);
+    setSidebarHistory(prev => [userInput, ...prev].slice(0, 5));
+    
+    // Store the input before clearing
+    const currentInput = userInput;
+    setUserInput("");
+
+    try {
+      // Simulated AI response - Replace with your actual API call
+      const botResponses: { [key: string]: string } = {
+        "What should I wear to a wedding?": "For a wedding, I recommend:\n\n1. Formal Attire:\n- A tailored suit in navy or charcoal\n- A knee-length cocktail dress\n- Appropriate dress shoes\n\n2. Consider:\n- The wedding's dress code\n- Time of day\n- Venue setting\n- Season\n\nAvoid wearing white to not overshadow the bride!",
+        "Suggest an outfit for a job interview": "For a job interview, here's a professional outfit:\n\n1. Conservative Option:\n- Well-fitted dark suit\n- Crisp dress shirt/blouse\n- Minimal accessories\n- Polished dress shoes\n\n2. Business Casual:\n- Blazer with dress pants/skirt\n- Quality dress shirt\n- Clean, professional shoes\n\nKeep it simple and professional!",
+        "What's trending in fashion?": "Current fashion trends include:\n\n1. Sustainable Fashion:\n- Eco-friendly materials\n- Vintage and upcycled pieces\n\n2. Style Trends:\n- Oversized blazers\n- High-waisted pants\n- Monochrome outfits\n- Platform shoes\n\n3. Colors:\n- Earth tones\n- Vibrant neons\n- Pastels\n\nRemember, the best trend is what makes you feel confident!",
+        "Hello":"Hello ✌, how are you?\nwhat can i help with?",
+        "Bye":"Bye,Have a good day 🙌"
+      };
+
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      let botReply = "Sorry, I couldn't process that request.";
+      
+      // Check for specific questions
+      for (const [question, answer] of Object.entries(botResponses)) {
+        if (currentInput.toLowerCase().includes(question.toLowerCase())) {
+          botReply = answer;
+          break;
+        }
+      }
+
+      const botMessage: Message = {
+        sender: "bot",
+        text: botReply,
+        timestamp: new Date().toLocaleTimeString(),
+      };
+
+      setChatHistory(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error:", error);
+      const errorMessage: Message = {
+        sender: "bot",
+        text: "I apologize, but I'm having trouble processing your request right now. Please try again.",
+        timestamp: new Date().toLocaleTimeString(),
+      };
+      setChatHistory(prev => [...prev, errorMessage]);
+    }
+  };
+
+  const handleSidebarClick = (message: string) => {
+    setUserInput(message);
+    setSidebarVisible(false);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-purple-900">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-16 bg-[#1C1C1C] p-4">
-        <div className="flex items-center justify-center">
-          <Menu size={24} className="text-gray-300 cursor-pointer" onClick={toggleMenu} />
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-black via via-black to-purple-500">
+      {/* Sliding Sidebar */}
+      <div 
+        className={`fixed left-0 top-0 h-full w-64 bg-[#1C1C1C] transform transition-transform duration-300 ease-in-out z-50 ${
+          sidebarVisible ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="p-4">
+          {/* Top Icons */}
+          <div className="flex items-center gap-2 mb-8">
+            <button onClick={toggleSidebar} className="p-2 hover:bg-white/5 rounded-lg transition-colors">
+              <Menu className="w-6 h-6 text-zinc-400" />
+            </button>
+            <button className="p-2 hover:bg-white/5 rounded-lg transition-colors">
+              <Search className="w-6 h-6 text-zinc-400" />
+            </button>
+          </div>
 
-        {/* Hamburger Menu */}
-        {menuOpen && (
-          <div className="absolute top-0 left-16 bg-[#2C2C2C] p-4 rounded-lg shadow-md mt-16 w-48">
+          {/* Recent Queries Section */}
+          <div className="mt-4">
             <h3 className="text-gray-300 text-lg mb-2">Recent Queries</h3>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              {recentQueries.length === 0 ? (
-                <li>No recent queries</li>
+            <div className="space-y-2">
+              {sidebarHistory.length === 0 ? (
+                <p className="text-gray-500">No recent queries</p>
               ) : (
-                recentQueries.map((query, index) => (
-                  <li key={index}>{query}</li>
+                sidebarHistory.map((query, index) => (
+                  <button
+                    key={index}
+                    className="w-full text-left p-2 text-gray-400 hover:text-purple-400 hover:bg-white/5 rounded-lg transition-colors"
+                    onClick={() => handleSidebarClick(query)}
+                  >
+                    {query.length > 30 ? `${query.substring(0, 30)}...` : query}
+                  </button>
                 ))
               )}
-            </ul>
+            </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Main Content */}
-      <div className="ml-16 p-4">
-        {/* Top Bar */}
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center gap-2">
-            <span className="text-purple-400 text-2xl font-semibold">STYLUX</span>
-            <button className="p-1 hover:bg-purple-800/30 rounded">
-              <PenLine size={20} className="text-purple-400" />
-            </button>
+      <div className="fixed inset-0 overflow-hidden">
+        <div className="h-full flex flex-col">
+          {/* Top Bar */}
+          <div className="flex justify-between items-center p-4 bg-black/20 backdrop-blur-sm">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={toggleSidebar}
+                className="p-2 hover:bg-white/5 rounded-lg transition-colors"
+              >
+                <Menu className="w-6 h-6 text-white" />
+              </button>
+              <span className="text-purple-400 text-2xl font-semibold">STYLUX</span>
+              <button className="p-1 hover:bg-purple-800/30 rounded">
+                <PenLine size={20} className="text-purple-400" />
+              </button>
+            </div>
+            <div className="flex items-center gap-4">
+              <button className="px-6 py-2 bg-gradient-to-r from-[#A894FF] to-purple-500 hover:from-purple-700 hover:to-purple-700 transition-colors rounded-full text-white text-sm font-medium">
+                <Link to="/">Home</Link>
+              </button>
+              <button className="px-6 py-2 bg-gradient-to-r from-[#A894FF] to-purple-500 hover:from-purple-700 hover:to-purple-700 transition-colors rounded-full text-white text-sm font-medium">
+                <Link to="/try">Try for free</Link>
+              </button>
+            </div>
           </div>
-          <button className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-colors">
-            <Link to="/try">Try for free</Link>
-          </button>
-        </div>
 
-        {/* Chat Interface */}
-        <div className="max-w-3xl mx-auto">
-          <form onSubmit={handleSubmit} className="mb-8">
-            <div className="bg-purple-900/40 backdrop-blur-lg p-8 rounded-2xl border border-purple-800/50">
-              <input
-                type="text"
-                placeholder="Message STYLUX"
-                className="w-full bg-transparent text-white placeholder-zinc-400 outline-none text-2xl mb-8"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
+          {/* Chat History */}
+          
+          <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">            <div className="max-w-3xl mx-auto space-y-4">
+              {chatHistory.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  <div className="flex items-start gap-2">
+  {msg.sender !== "user" && (
+    <img
+      src="src\assets\main logo.png" // Replace with your logo path
+      alt="icon"
+      className="w-9 h-10 rounded-full mt-2"
+    />
+  )}
+  <div
+    className={`max-w-[80%] p-4 rounded-2xl ${
+      msg.sender === "user"
+        ? "bg-[#4d2a74] text-white rounded-tr-sm"
+        : "text-white rounded-tl-sm"
+    }`}
+  >
+    <p className="whitespace-pre-wrap">{msg.text}</p>
+    <span className="text-xs text-white mt-2 block">
+      {msg.timestamp}
+    </span>
+  </div>
+</div>
 
-              <div className="flex gap-4">
+                </div>
+              ))}
+              <div ref={chatEndRef} />
+            </div>
+          </div>
+
+          {/* Input Area */}
+          <div className="p-4 border-t border-gray-800">
+            <form onSubmit={handleSendMessage} className="max-w-3xl mx-auto">
+              <div className="flex gap-4 items-center">
+                <input
+                  type="text"
+                  placeholder="Message STYLUX"
+                  className="flex-1 bg-purple-900/40 backdrop-blur-lg px-4 py-3 rounded-lg border border-purple-800/50 text-white placeholder-zinc-400 outline-none"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                />
                 <button
                   type="button"
-                  className="p-3 hover:bg-purple-800/30 rounded-full border border-purple-700/50"
+                  className="p-2 hover:bg-black/5 rounded-full transition-colors border border-purple-300"
                 >
-                  <Plus size={24} className="text-purple-400" />
+                  <Plus size={20} className="text-purple-400" />
                 </button>
-
+                
                 <button
                   type="submit"
-                  className="ml-auto px-6 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-full transition-colors"
+                  className="px-6 py-2 bg-gradient-to-r from-[#A894FF] to-purple-500 hover:from-purple-700 hover:to-purple-700 transition-colors rounded-full text-white text-sm font-medium"
                 >
                   Generate
                 </button>
               </div>
-            </div>
-          </form>
-
-          {/* Chatbot Component */}
-          <Chatbot />
-
-          <p className="text-gray-400 text-sm text-center mt-4">
-            By clicking "Generate" you agree to generate.{" "}
-            <a href="#" className="text-purple-400 hover:underline">
-              Privacy Notice
-            </a>
-          </p>
+            </form>
+          </div>
         </div>
-      </div>
-    </div>
+      </div>  
+      </div> 
   );
 }
 

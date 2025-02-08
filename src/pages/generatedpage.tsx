@@ -21,8 +21,8 @@ function GeneratedPage({ initialMessage }: GeneratedPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-purple-900">
-      {/* Sidebar */}
+<div className="min-h-screen bg-gradient-to-br from-black via via-black to-purple-500">
+{/* Sidebar */}
       <div className={`fixed left-0 top-0 h-screen w-60 bg-zinc-900/50 backdrop-blur-md p-4 border-r border-white/10 transition-transform ${sidebarVisible ? 'translate-x-0' : '-translate-x-full'}`}>
         {/* Top Icons */}
         <div className="flex items-center gap-2 mb-8">
@@ -60,17 +60,19 @@ function GeneratedPage({ initialMessage }: GeneratedPageProps) {
             <Menu className="w-6 h-6 text-white" />
           </button>
           <div className="flex items-center gap-2">
-            <span className="text-purple-400 text-xl font-medium">STYLUX</span>
+            <span className=" text-purple-400 text-xl font-medium">STYLUX</span>
+            
+          
             <ChevronDown className="w-5 h-5 text-purple-400" />
           </div>
           
           <div className='ho'>
-          <button className="px-6 py-2 bg-purple-500 hover:bg-purple-600 transition-colors rounded-full text-white text-sm font-medium left-10px">
-           <Link to='/'> Home</Link>
+          <button className="px-6 py-2 bg-gradient-to-r from-[#A894FF] to-purple-500 hover:from-purple-700 hover:to-purple-700 transition-colors rounded-full text-white text-sm font-medium">
+          <Link to='/'> Home</Link>
           </button>
           </div>
           <div className='tr'>
-          <button className="px-6 py-2 bg-purple-500 hover:bg-purple-600 transition-colors rounded-full text-white text-sm font-medium ">
+          <button className="px-6 py-2 bg-gradient-to-r from-[#A894FF] to-purple-500 hover:from-purple-700 hover:to-purple-700 transition-colors rounded-full text-white text-sm font-medium">
             <Link to="/try">Try for free</Link>
           </button>
           </div>
@@ -83,12 +85,12 @@ function GeneratedPage({ initialMessage }: GeneratedPageProps) {
           </h1>
 
           {/* Message Input Box */}
+          
           <div className="relative">
-            <div className="bg-zinc-900/30 backdrop-blur-lg rounded-2xl p-6">
+            <div className='relative1'>
+            <div className="bg-purple-900/30 backdrop-blur-lg rounded-2xl p-6">
               <div className="flex items-center gap-4 mb-4">
-                <button className="p-2 hover:bg-white/5 rounded-full transition-colors">
-                  <Plus className="w-6 h-6 text-zinc-400" />
-                </button>
+                
                 <input
                   type="text"
                   value={message}
@@ -100,15 +102,24 @@ function GeneratedPage({ initialMessage }: GeneratedPageProps) {
               </div>
               
               <div className="flex justify-between items-center">
-                <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
-                  <Globe2 className="w-4 h-4 text-zinc-400" />
-                  <span className="text-zinc-400 text-sm">Browse</span>
-                </button>
-                <button className="px-6 py-2 bg-purple-500 hover:bg-purple-600 transition-colors rounded-full text-white text-sm font-medium">
-                  Generate
-                </button>
-              </div>
+  <div className="flex items-center gap-3"> 
+    <button className="p-2 hover:bg-white/5 rounded-full transition-colors border border-white">
+      <Plus className="w-3 h-3 text-zinc-400" />
+    </button>
+    
+    <button className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 hover:bg-white/5 transition-colors">
+      <Globe2 className="w-4 h-4 text-zinc-400" />
+      <span className="text-zinc-400 text-sm">Browse</span>
+    </button>
+  </div>
+
+  <button className="px-6 py-2 bg-gradient-to-r from-[#A894FF] to-purple-500 hover:from-purple-700 hover:to-purple-700 transition-colors rounded-full text-white text-sm font-medium">
+    Generate
+  </button>
+</div>
+
             </div>
+          </div>
 
             {/* Privacy Notice */}
             <p className="text-center text-zinc-400 text-sm mt-4">

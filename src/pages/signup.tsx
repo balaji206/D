@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 function Signup() {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -24,15 +24,19 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-purple-950 to-black">
+    <div className="min-h-screen bg-gradient-to-br from-black via via-black to-purple-500">
       {/* Header */}
       <header className="p-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <User className="h-8 w-8 text-white" />
+        <img
+      src="src\assets\main logo.png" // Replace with your logo path
+      alt="icon"
+      className="w-9 h-10 rounded-full "
+    />
           <span className="text-white text-2xl font-bold">STYLUX</span>
         </div>
         <button className="bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600 transition-colors">
-          Try for free
+          <Link to='/try'>Try for free</Link>
         </button>
       </header>
 
@@ -40,8 +44,12 @@ function Signup() {
       <main className="flex justify-center items-center px-4 py-8">
         <div className="bg-gradient-to-br from-purple-900 to-purple-800 p-8 rounded-3xl w-full max-w-md">
           <div className="flex flex-col items-center mb-8">
-            <User className="h-16 w-16 text-white mb-4" />
-            <h1 className="text-4xl font-bold text-white">Sign up</h1>
+          <img
+      src="src\assets\main logo.png" // Replace with your logo path
+      alt="icon"
+      className="w-36 h-35 rounded-full "
+    />
+                <h1 className="text-4xl font-bold text-white">Sign up</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
